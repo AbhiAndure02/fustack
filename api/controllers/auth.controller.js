@@ -73,7 +73,7 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
-    const { email, password, recaptchaToken } = req.body;
+    const { email, password } = req.body;
 
     try {
         // Validate inputs

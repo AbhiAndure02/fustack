@@ -32,7 +32,7 @@ const Signin = () => {
           dispatch(signInStart());
           setLoading(true);
           
-          const res = await fetch('https://codentraa.onrender.com/api/auth/login', {
+          const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
