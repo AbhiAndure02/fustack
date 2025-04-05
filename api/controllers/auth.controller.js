@@ -81,20 +81,7 @@ export const signin = async (req, res, next) => {
             return next(errorHandler(400, "Email and password are required"));
         }
 
-        // Verify reCAPTCHA if in production
-        if (process.env.NODE_ENV === 'production') {
-            if (!recaptchaToken) {
-                return next(errorHandler(400, "reCAPTCHA verification required"));
-            }
-
-            const recaptchaResponse = await axios.post(
-                `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
-            );
-
-            if (!recaptchaResponse.data.success) {
-                return next(errorHandler(400, "reCAPTCHA verification failed"));
-            }
-        }
+    
 
         // Check if user exists
         const user = await User.findOne({ email }).select('+password +loginAttempts +accountLockedUntil');
