@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon api/index.js "
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
+    "build": "npm install && npm install --prefix landingPage  && npm run build --prefix landingPage"
+
   },
   "keywords": [],
   "author": "",

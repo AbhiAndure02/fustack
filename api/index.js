@@ -6,10 +6,11 @@ import registerAuth from "./routes/register.routes.js";
 import projectRoutes from "./routes/project.route.js"
 import activityRoutes from "./routes/activity.routes.js"
 import eventRoutes from "./routes/event.routes.js";
+import path from "path";
 
 // Load environment variables first
 env.config();
-
+const __dirname = path.resolve();
 const app = express();
 app.use(express.json());
 
@@ -30,10 +31,11 @@ mongoose.connect(process.env.MONGO)
     process.exit(1); // Exit if DB connection fails
   });
 
-// Routes
-app.get('/', (req, res) => {
-  res.send("Hello World");
-});
+app.use(express.static(path.join(__dirname, "/landinPage/dist")));
+app,get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/landinPage/dist/index.html"));
+}
+);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/registers', registerAuth);
