@@ -123,8 +123,8 @@ const HomePage = () => {
             </motion.p>
             
             <motion.div variants={itemVariants}>
-              <Link to='/'
-                href="#projects"
+              <Link to='/login'
+            
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-teal-600 rounded-full font-medium text-lg hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
