@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api/index.js",
     "dev": "nodemon api/index.js",
-    "build": "npm install && npm start"
+    "build": "npm install && npm install --prefix landingPage  && npm run build --prefix landingPage"
 
   },
   "keywords": [],
