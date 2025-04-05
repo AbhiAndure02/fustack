@@ -45,17 +45,12 @@ app.use('/api/registers', registerAuth);
 app.use('/api/project', projectRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/events', eventRoutes);
-if (process.env.NODE_ENV === 'production') {
+
   // Serve static files from the frontend dist folder
-  app.use(express.static(path.join(__dirname, '../landingPage/dist')));
+  app.use(express.static(path.join(__dirname, '/landingPage/dist')));
 
   // Handle SPA routing - return index.html for unmatched routes
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../landingPage/dist/index.html'));
-  });
-}
-
-
+ 
 // Error handler middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
