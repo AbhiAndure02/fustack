@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.stroke-text {
+    text-shadow: 
+      -2px -2px 0 white,  
+       2px -2px 0 white,  
+      -2px  2px 0 white,  
+       2px  2px 0 white; 
+  }
+  .stroke-text1 {
+    text-shadow: 
+      -1px -1px 0 white,  
+       1px -1px 0 white,  
+      -1px  1px 0 white,  
+       1px  1px 0 white; 
+  }
+  .stroke-text2
+  {
+    text-shadow: 
+    -2px -2px 0 black,  
+     2px -2px 0 black,  
+    -2px  2px 0 black,  
+     2px  2px 0 black;
+  }
+
+  .darkmode{
+    .stroke-text, .stroke-text1,.stroke-text2 {
+        text-shadow: none;
+        background-color: #212121;
+        color: white;
+      }
+  
+  }
+  
