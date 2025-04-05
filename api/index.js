@@ -8,11 +8,15 @@ import activityRoutes from "./routes/activity.routes.js"
 import eventRoutes from "./routes/event.routes.js";
 import path from "path";
 
+
+
 // Load environment variables first
 env.config();
-const __dirname = path.resolve();
+
+
 const app = express();
 app.use(express.json());
+const __dirname = path.resolve();
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,17 +35,26 @@ mongoose.connect(process.env.MONGO)
     process.exit(1); // Exit if DB connection fails
   });
 
-app.use(express.static(path.join(__dirname, "/landinPage/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/landinPage/dist/index.html"));
-}
-);
+// Routes
+app.get('/', (req, res) => {
+  res.send("Hello World");
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/registers', registerAuth);
 app.use('/api/project', projectRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/events', eventRoutes);
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the frontend dist folder
+  app.use(express.static(path.join(__dirname, '../landingPage/dist')));
+
+  // Handle SPA routing - return index.html for unmatched routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../landingPage/dist/index.html'));
+  });
+}
+
 
 // Error handler middleware
 app.use((err, req, res, next) => {
