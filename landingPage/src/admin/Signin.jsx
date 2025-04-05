@@ -32,7 +32,7 @@ const Signin = () => {
           dispatch(signInStart());
           setLoading(true);
           
-          const res = await fetch('/api/auth/login', {
+          const res = await fetch('https://codentraa.onrender.com/api/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ const Signin = () => {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <Link to="/admin/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                 Sign up
               </Link>
             </p>
