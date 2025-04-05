@@ -8,11 +8,8 @@ import activityRoutes from "./routes/activity.routes.js"
 import eventRoutes from "./routes/event.routes.js";
 import path from "path";
 
-
-
 // Load environment variables first
 env.config();
-
 
 const app = express();
 app.use(express.json());
@@ -27,15 +24,15 @@ mongoose.connect(process.env.MONGO)
     
     // Start server only after DB connection is established
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`); // Fixed template literal
     });
   })
   .catch((err) => {
     console.error("Error connecting to MongoDB", err);
-    process.exit(1); // Exit if DB connection fails
+    process.exit(1);
   });
 
-// Routes
+// API Routes (should come before static files)
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
@@ -46,11 +43,9 @@ app.use('/api/project', projectRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/events', eventRoutes);
 
-  // Serve static files from the frontend dist folder
-  app.use(express.static(path.join(__dirname, '/landingPage/dist')));
+// Serve static files from the frontend dist folder
+app.use(express.static(path.join(__dirname, '../landingPage/dist')));
 
-  // Handle SPA routing - return index.html for unmatched routes
- 
 // Error handler middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -61,4 +56,9 @@ app.use((err, req, res, next) => {
     statusCode,
     message
   });
+});
+
+// Wildcard route for frontend routing (MUST BE LAST)
+app.get(/^\/(?!api).*/, (req, res) => {  // Regex excludes /api routes
+  res.sendFile(path.join(__dirname, '../landingPage/dist/index.html'));
 });

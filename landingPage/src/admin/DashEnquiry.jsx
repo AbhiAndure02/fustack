@@ -43,32 +43,7 @@ const DashEnquiry = () => {
     fetchEnquiries();
   }, []);
 
-  const handlePageChange = async (newPage) => {
-    if (newPage < 1 || newPage > pagination.pages) return;
-    
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/registers/getregister?page=${newPage}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch enquiries');
-      }
-      const result = await response.json();
-      
-      if (result.success && Array.isArray(result.data)) {
-        setEnquiries(result.data);
-        setPagination({
-          page: result.page,
-          pages: result.pages,
-          total: result.total,
-          count: result.count
-        });
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   return (
     <div className="flex h-screen">

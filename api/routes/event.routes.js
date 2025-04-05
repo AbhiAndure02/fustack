@@ -3,7 +3,7 @@ import {
   createEvent,
   getAllEvents,
   getEventsForDate,
-  updateEvent,
+  
   deleteEvent
 } from '../controllers/event.controller.js';
 
@@ -20,9 +20,8 @@ router
 router
   .route('/:id')
   .get(getEventsForDate)
-  .patch(updateEvent)
   .delete(deleteEvent);
 
-router.get('/date/:date', getEventsForDate);
+
 
 export default router;

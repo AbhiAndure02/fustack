@@ -9,8 +9,6 @@ router.route('/')
   )
   .post(createProject);
 
-router.route('/stats')
-  .get(getProjectStats);
 
 router.route('/:id')
   .put(updateProject)
