@@ -1,64 +1,79 @@
 import mongoose from "mongoose";
 import env from "dotenv";
 import express from "express";
-import authRoutes from "./routes/auth.routes.js";
-import registerAuth from "./routes/register.routes.js";
-import projectRoutes from "./routes/project.route.js"
-import activityRoutes from "./routes/activity.routes.js"
-import eventRoutes from "./routes/event.routes.js";
 import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
-// Load environment variables first
+// 1. Basic Configuration
 env.config();
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
-const __dirname = path.resolve();
 
-const PORT = process.env.PORT || 3000;
+// 2. Route Validation Middleware (Fixes the path-to-regexp error)
+app.use((req, res, next) => {
+  if (req.path.includes('://')) {
+    console.error(`⚠️ Invalid route detected: ${req.path}`);
+    return res.status(400).json({ error: "Route paths cannot contain URLs" });
+  }
+  next();
+});
 
-// Connect to MongoDB before starting the server
+// 3. Safe Route Imports
+const loadRoutes = async () => {
+  try {
+    const { default: authRoutes } = await import('./routes/auth.routes.js');
+    const { default: registerRoutes } = await import('./routes/register.routes.js');
+    const { default: projectRoutes } = await import('./routes/project.route.js');
+    const { default: activityRoutes } = await import('./routes/activity.routes.js');
+    const { default: eventRoutes } = await import('./routes/event.routes.js');
+
+    app.use('/api/auth', authRoutes);
+    app.use('/api/registers', registerRoutes);
+    app.use('/api/project', projectRoutes);
+    app.use('/api/activity', activityRoutes);
+    app.use('/api/events', eventRoutes);
+    
+    console.log("✅ Routes mounted successfully");
+  } catch (err) {
+    console.error("❌ Failed to load routes:", err);
+    process.exit(1);
+  }
+};
+
+// 4. Database Connection
 mongoose.connect(process.env.MONGO)
   .then(() => {
-    console.log("Connected to MongoDB");
-    
-    // Start server only after DB connection is established
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`); // Fixed template literal
-    });
+    console.log("✅ MongoDB Connected");
+    return loadRoutes();
   })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB", err);
+  .catch(err => {
+    console.error("❌ MongoDB Connection Error:", err);
     process.exit(1);
   });
 
-// API Routes (should come before static files)
-app.get('/', (req, res) => {
-  res.send("Hello World");
+// 5. Static Files (Optional - Only if frontend exists)
+const staticPath = path.join(__dirname, '../landingPage/dist');
+if (fs.existsSync(staticPath)) {
+  app.use(express.static(staticPath));
+  console.log(`✅ Serving static files from ${staticPath}`);
+} else {
+  console.warn(`⚠️  Frontend build not found at ${staticPath}`);
+}
+
+// 6. Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`
+  🚀 Server running on port ${PORT}
+  🛠️  Mode: ${process.env.NODE_ENV || 'development'}
+  `);
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/registers', registerAuth);
-app.use('/api/project', projectRoutes);
-app.use('/api/activity', activityRoutes);
-app.use('/api/events', eventRoutes);
-
-// Serve static files from the frontend dist folder
-app.use(express.static(path.join(__dirname, '../landingPage/dist')));
-
-// Error handler middleware
+// 7. Basic Error Handling
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  
-  res.status(statusCode).json({ 
-    success: false,
-    statusCode,
-    message
-  });
-});
-
-// Wildcard route for frontend routing (MUST BE LAST)
-app.get(/^\/(?!api).*/, (req, res) => {  // Regex excludes /api routes
-  res.sendFile(path.join(__dirname, '../landingPage/dist/index.html'));
+  console.error('Server Error:', err);
+  res.status(500).json({ error: "Internal Server Error" });
 });

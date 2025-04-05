@@ -30,7 +30,7 @@ const DashActivity = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       setError('Please login first');
-      navigate('/admin/auth/login');
+      navigate('/admin/login');
       return;
     }
 
@@ -123,7 +123,7 @@ const DashActivity = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       setError('Please login first');
-      navigate('/admin/auth/login');
+      navigate('/auth/login');
       return;
     }
 

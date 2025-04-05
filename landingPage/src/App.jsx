@@ -41,8 +41,8 @@ const App = () => {
         {/* <Route path="/portfolio1" element={<Neha />} /> */}
         <Route path="/portfolio2" element={<Sushama />} />
         <Route path="/portfolio3" element={<Shubham />} />
-        <Route path="/admin/auth/signup" element={<Signup/>} />
-        <Route path='/admin/auth/login' element={<Signin />} />
+        <Route path="/admin/signup" element={<Signup/>} />
+        <Route path='/admin/login' element={<Signin />} />
         <Route element = {<PrivateRoute />}>
 
         <Route path='dashboard' element={<Dashboard/>} />
@@ -57,7 +57,7 @@ const App = () => {
 
 
         </Route>
-       <Route path="*" element={<NotFound />} /> 
+       
 
 
 

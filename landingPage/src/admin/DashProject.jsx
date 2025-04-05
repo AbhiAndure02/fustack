@@ -31,7 +31,7 @@ const DashProject = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       setError('Please login first');
-      navigate('/login');
+      navigate('/admin/login');
       return;
     }
 
@@ -39,7 +39,7 @@ const DashProject = () => {
       try {
         dispatch(getProjectStart)
         setLoading(true);
-        const response = await axios.get('/api/project', {
+        const response = await axios.get('/api/project/get-project', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -72,14 +72,14 @@ const DashProject = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       setError('Please login first');
-      navigate('/admin/auth/login');
+      navigate('/admin/login');
       return;
     }
 
     try {
       setLoading(true);
       dispatch(addProjectStart)
-      const response = await axios.post('/api/project', newProject, {
+      const response = await axios.post('/api/project/create-project', newProject, {
         headers: {
           Authorization: `Bearer ${token}`
         }
